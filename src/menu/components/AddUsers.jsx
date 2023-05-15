@@ -1,11 +1,13 @@
 import { Close } from "@mui/icons-material";
 import {
+  Alert,
   Box,
   Button,
   CircularProgress,
   Drawer,
   FormHelperText,
   Grid,
+  Snackbar,
   TextField,
   Typography,
 } from "@mui/material";
@@ -24,7 +26,6 @@ export const AddUsers = ({ open, togle }) => {
   // state para validar si el email existe o no.
   const [validEmail, setValidEmail] = useState(false);
 
-  
   const [enviando, setEnviando] = useState(false);
 
   //state con el objeto para crear al usuario.
@@ -55,8 +56,7 @@ export const AddUsers = ({ open, togle }) => {
     resetForm();
   };
 
-
- // Funcion para enviar a endpoint el nuevo usuario.
+  // Funcion para enviar a endpoint el nuevo usuario.
   const handleSubmit = async (e) => {
     console.log(newUsuario);
     e.preventDefault();
@@ -71,6 +71,7 @@ export const AddUsers = ({ open, togle }) => {
         resetForm();
         setEnviando(false);
         setAccion(true);
+        setAbrir(true);
       } else if (result?.status === 400) {
         setValidEmail(true);
       } else {
@@ -84,7 +85,7 @@ export const AddUsers = ({ open, togle }) => {
       setEnviando(false);
     }
   };
- 
+
   //Detectar el archivo cargado
   const handleFileChange = (event) => {
     const file = event.target.files[0];
@@ -102,6 +103,13 @@ export const AddUsers = ({ open, togle }) => {
       };
       reader.readAsDataURL(file);
     }
+  };
+
+  const handleCloseSnack = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setAbrir(false);
   };
 
   return (
@@ -124,9 +132,7 @@ export const AddUsers = ({ open, togle }) => {
           backgroundColor: "#e5e5e5",
         }}
       >
-        <Typography variant="h6">
-          Agregar Usuario {accion ? " verdadero" : "falso"}
-        </Typography>
+        <Typography variant="h6">Agregar Usuario</Typography>
         <Close
           fontSize="small"
           onClick={handleClose}
@@ -134,7 +140,6 @@ export const AddUsers = ({ open, togle }) => {
         />
       </Box>
       <Box sx={{ p: 5 }}>
-       
         <form onSubmit={handleSubmit}>
           <Grid container spacing={2}>
             <Grid item xs={12}>
@@ -217,6 +222,23 @@ export const AddUsers = ({ open, togle }) => {
           </Box>
         </form>
       </Box>
+      <Snackbar
+        open={abrir}
+        onClose={handleCloseSnack}
+        autoHideDuration={3000}
+        key={"top" + "right"}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+        style={{ zIndex: 999999 }}
+      >
+        <Alert
+          variant="filled"
+          elevation={3}
+          onClose={handleCloseSnack}
+          severity="success"
+        >
+          Datos guardados correctamente
+        </Alert>
+      </Snackbar>
     </Drawer>
   );
 };
