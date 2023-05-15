@@ -19,23 +19,35 @@ import DialogActions from "@mui/material/DialogActions";
 // ** Icons Imports
 import { CloseOutlined, Edit } from "@mui/icons-material";
 import axios from "axios";
-import mock2 from "../../@fake-db/mocks2";
+import mock from "../../@fake-db/mocks";
 import { Alert, Snackbar } from "@mui/material";
 import { ActionContext } from "../../context";
+
+
+// Modal para editar la información del usuario
+
 export const DialogEditUser = ({ selectedRow }) => {
   // ** States
 
+  //Context para manejar el refresh de la tabla.
   const { setAccion } = useContext(ActionContext);
 
+  //state para abrir el snackbar
   const [open, setOpen] = useState(false);
+
+  //state para abrir el modal
   const [show, setShow] = useState(false);
+
+  // objeto para enviar los datos a editar.
   const [edit, setEdit] = useState({
     firstName: selectedRow.firstName,
     lastName: selectedRow.lastName,
     email: selectedRow.email,
     userName: selectedRow.userName,
+    avatar : selectedRow.avatar
   });
 
+  // Funcion que se comunica con el endpoint de actualizar.
   const handleSubmit = (e) => {
     e.preventDefault();
     try {
@@ -56,6 +68,8 @@ export const DialogEditUser = ({ selectedRow }) => {
     }
   };
 
+
+  // Cerrar el snackbar
   const handleClose = (event, reason) => {
     if (reason === "clickaway") {
       return;

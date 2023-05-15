@@ -10,7 +10,7 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useContext, useState } from "react";
-import mock2 from "../../@fake-db/mocks2";
+import mock from "../../@fake-db/mocks";
 import axios from "axios";
 import { ActionContext } from "../../context";
 
@@ -21,11 +21,13 @@ export const AddUsers = ({ open, togle }) => {
   // Context para menejar el refresh del data grid.
   const { accion, setAccion } = useContext(ActionContext);
 
-  // Estate para validar si el email existe o no.
+  // state para validar si el email existe o no.
   const [validEmail, setValidEmail] = useState(false);
 
+  
   const [enviando, setEnviando] = useState(false);
 
+  //state con el objeto para crear al usuario.
   const [newUsuario, setNewUsuario] = useState({
     firstName: "",
     lastName: "",
@@ -34,6 +36,7 @@ export const AddUsers = ({ open, togle }) => {
     avatar: "",
   });
 
+  //Funcion para realizar reset algunos states.
   const resetForm = () => {
     setNewUsuario({
       firstName: "",
@@ -46,38 +49,14 @@ export const AddUsers = ({ open, togle }) => {
     setValidEmail(false);
   };
 
+  // Funcion para cerrar drawer
   const handleClose = () => {
     togle();
     resetForm();
   };
 
-  /* const handleSubmit = (e) => {
-    e.preventDefault();
-    setEnviando(true)
-    try {
-      axios
-        .post("/createUser", JSON.stringify(newUsuario))
-        .then((response) => {
-          if (response.status === 200) {
-            resetForm();
-            setEnviando(false)
-          } else {
-            console.log("Error al crear el usuario");
-          }
-        })
-        .catch((error) => {
-          console.log(error);
 
-          if (error.response?.status === 400) {
-            setValidEmail(true);
-          }
-        });
-    } catch (e) {
-      console.log(e);
-    }
-  };
- */
-
+ // Funcion para enviar a endpoint el nuevo usuario.
   const handleSubmit = async (e) => {
     console.log(newUsuario);
     e.preventDefault();
@@ -105,7 +84,8 @@ export const AddUsers = ({ open, togle }) => {
       setEnviando(false);
     }
   };
-
+ 
+  //Detectar el archivo cargado
   const handleFileChange = (event) => {
     const file = event.target.files[0];
 
@@ -113,6 +93,7 @@ export const AddUsers = ({ open, togle }) => {
 
     setNewUsuario({ ...newUsuario, avatar: file?.name ? file?.name : "" });
 
+    // Convertir archivo en base 64
     if (file) {
       const reader = new FileReader();
       reader.onload = () => {

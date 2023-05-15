@@ -12,7 +12,7 @@ import { useContext, useEffect, useState } from "react";
 import { Toolbar, DialogEditUser, DeleteUsers } from "../components";
 
 import axios from "axios";
-import mock2 from "../../@fake-db/mocks2";
+import mock from "../../@fake-db/mocks";
 import { AddUsers } from "../components/AddUsers";
 import { ActionContext } from "../../context";
 import { obtenerIniciales } from "../../helpers/obtenerIniciales";
@@ -151,16 +151,27 @@ const columns = [
 ];
 
 export const UsuariosView = () => {
-  const { accion, setAccion } = useContext(ActionContext); // Utiliza el contexto correctamente
+
+  //Context para manejar el refresh de la tabla.
+  const { accion, setAccion } = useContext(ActionContext); 
 
   const [addUserOpen, setAddUserOpen] = useState(false);
+
+  //State para llenar la tabla con datos.
   const [usuarios, setUsuarios] = useState([]);
+
   const [pageSize, setPageSize] = useState(20);
+
+  // state con las coincidencias a buscar.
   const [searchText, setSearchText] = useState("");
+
+  //Data filtrada en el buscado
   const [filteredData, setFilteredData] = useState([]);
 
+  // Abrir drawer para añadir un nuevo usuario.
   const toggleAddUser = () => setAddUserOpen(!addUserOpen);
 
+  //traer usuario.
   const getUsuarios = () => {
     try {
       axios.get("/users").then(function (response) {
@@ -174,6 +185,7 @@ export const UsuariosView = () => {
     }
   };
 
+  // Funcion que filtra los datos con las coincidencias escritas
   const handleSearch = (searchValue) => {
     setSearchText(searchValue);
     const searchRegex = new RegExp(escapeRegExp(searchValue), "i");
@@ -194,6 +206,7 @@ export const UsuariosView = () => {
     getUsuarios();
   }, []);
 
+  // Refresh a la tabla cuando se ejecuta alguna accion (edit, create, update)
   useEffect(() => {
     if (accion) {
       getUsuarios(); // Volver a cargar los usuarios cuando "accion" cambie

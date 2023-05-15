@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState, SyntheticEvent, Fragment, useContext } from "react";
+import { useState, SyntheticEvent, Fragment, useContext, useEffect } from "react";
 
 // ** MUI Imports
 import Box from "@mui/material/Box";
@@ -11,9 +11,11 @@ import MenuItem from "@mui/material/MenuItem";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 
-import { LogoutOutlined } from "@mui/icons-material";
+import { EditAttributesOutlined, LogoutOutlined } from "@mui/icons-material";
 import { AuthContext } from "../../auth";
 import { useNavigate } from "react-router-dom";
+import mock from "../../@fake-db/mocks";
+import axios from "axios";
 
 // ** Styled Components
 const BadgeContentSpan = styled("span")(({ theme }) => ({
@@ -27,6 +29,8 @@ const BadgeContentSpan = styled("span")(({ theme }) => ({
 const UserDropdown = () => {
   const navigate = useNavigate();
   const { user, logout } = useContext(AuthContext);
+
+  const [usuarioLogin, setUsuarioLogin] = useState();
   // ** States
   const [anchorEl, setAnchorEl] = useState(null);
 
@@ -55,11 +59,34 @@ const UserDropdown = () => {
     setAnchorEl(null);
   };
 
+  //Funcion para cerrar sesión del usuario.
   const handleLogout = () => {
     logout();
 
     navigate("/auth/login", { replace: true });
   };
+
+  const getUsuarios = (correo) => {
+    try {
+      axios.get("/user/login", { data: { correo } }).then(function (response) {
+        if (response.status === 200) {
+          setUsuarioLogin(response.data?.usuario);
+        }
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    if(user)
+    {
+      getUsuarios(user.correo)
+    }
+  
+   
+  }, [])
+  
 
   return (
     <Fragment>
@@ -74,10 +101,10 @@ const UserDropdown = () => {
         }}
       >
         <Avatar
-          alt={user? user.firstName : ''}
+          alt={usuarioLogin? usuarioLogin.firstName : ''}
           onClick={handleDropdownOpen}
           sx={{ width: 40, height: 40 }}
-          src={user ? user.avatar : ''}
+          src={usuarioLogin ? usuarioLogin.avatar : ''}
         />
       </Badge>
       <Menu
@@ -105,8 +132,8 @@ const UserDropdown = () => {
               }}
             >
               <Avatar
-                alt="John Doe"
-                src={user.avatar}
+                alt={usuarioLogin? usuarioLogin.firstName : ''}
+                src={usuarioLogin? usuarioLogin.avatar : ''}
                 sx={{ width: "2.5rem", height: "2.5rem" }}
               />
             </Badge>
@@ -120,16 +147,23 @@ const UserDropdown = () => {
             >
               <Typography
                 sx={{ fontWeight: 600 }}
-              >{`${user ? user.firstName : ''} ${user ? user.lastName : ''}`}</Typography>
+              >{`${usuarioLogin ? usuarioLogin.firstName : ''} ${usuarioLogin ? usuarioLogin.lastName : ''}`}</Typography>
               <Typography
                 variant="body2"
                 sx={{ fontSize: "0.8rem", color: "text.disabled" }}
               >
-                {user ? user.correo : ''}
+                {usuarioLogin ? usuarioLogin.email : ''}
               </Typography>
             </Box>
           </Box>
         </Box>
+        <Divider />
+        <MenuItem sx={{ py: 2 }} onClick={()=> navigate('/user/edit-profile')}>
+          <EditAttributesOutlined
+            sx={{ mr: 2, fontSize: "1.375rem", color: "text.secondary" }}
+          />
+          Perfil
+        </MenuItem>
         <Divider />
         <MenuItem sx={{ py: 2 }} onClick={handleLogout}>
           <LogoutOutlined

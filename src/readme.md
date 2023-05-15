@@ -1,4 +1,4 @@
-# ISALUD - ISAPRE DE CODELCO
+# APP Test
 
 Sistema de usuarios APP TEST.
 
@@ -42,4 +42,4 @@ _Descripción de tecnologias y componentes:_
 
 ---
 
-⌨️ con ❤️ por [Solutoria](httpshttps://www.solutoria.cl/) 
+⌨️  por Luis Herrera.

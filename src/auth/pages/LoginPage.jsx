@@ -7,7 +7,7 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import { useContext, useState } from "react";
-import mock2 from "../../@fake-db/mocks2";
+import mock from "../../@fake-db/mocks";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context";
 

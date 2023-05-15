@@ -1,12 +1,21 @@
 import { Delete, Edit } from "@mui/icons-material";
 import IconButton from "@mui/material/IconButton";
 import axios from "axios";
-import mock2 from "../../@fake-db/mocks2";
+import mock from "../../@fake-db/mocks";
 import { useContext } from "react";
 import { ActionContext } from "../../context";
 import Swal from "sweetalert2";
+
+/* componente para realizar la eliminación de un usuario */
+
 export const DeleteUsers = ({ selectedRow }) => {
+
+
+  // Context para manejar el refresh de la tabla
   const { setAccion } = useContext(ActionContext);
+
+
+  // Funcion para realizar la eliminación de un usuario
   const handleSubmit = () => {
     Swal.fire({
       title: "Eliminar registro",
