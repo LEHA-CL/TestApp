@@ -16,7 +16,7 @@ export const AuthProvider = ({ children }) => {
 
   const login = (firstName = '',lastName = '',correo = "",avatar = "") => {
 
-    const user = {id:'ABC', firstName,lastName,correo,avatar}
+    const user = {firstName,lastName,correo,avatar}
 
     const action = {
       type: types.login,
